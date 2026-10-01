@@ -15,6 +15,7 @@ export function PlantCard({ plant }: { plant: Plant }) {
     (plant.bioassays.length
       ? "Laboratory enzyme and antioxidant assays only."
       : "Cited catalog record.");
+  const preparation = plant.traditionalUses[0]?.preparation;
 
   return (
     <Link href={`/plants/${plant.id}`} className="block h-full">
@@ -29,6 +30,12 @@ export function PlantCard({ plant }: { plant: Plant }) {
         </CardHeader>
         <CardContent className="space-y-3">
           <p className="line-clamp-3 text-sm text-muted-foreground">{lead}</p>
+          {preparation ? (
+            <p className="line-clamp-2 text-sm">
+              <span className="font-medium">Preparation as published: </span>
+              {preparation}
+            </p>
+          ) : null}
           <div className="flex flex-wrap gap-1">
             {plant.applicationTags.slice(0, 5).map((tag) => (
               <Badge key={tag} variant="secondary">

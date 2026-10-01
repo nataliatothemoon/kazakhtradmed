@@ -172,6 +172,11 @@ export function ConsultForm() {
                 {row.matchedUses[0].preparation}
               </p>
             ) : null}
+            {row.matchedUses[0]?.partUsed ? (
+              <p className="text-sm text-muted-foreground">
+                Part: {row.matchedUses[0].partUsed}
+              </p>
+            ) : null}
             <div className="flex flex-wrap gap-2">
               {(row.matchedUses[0] ?? row.plant.traditionalUses[0]) ? (
                 <CitationChip

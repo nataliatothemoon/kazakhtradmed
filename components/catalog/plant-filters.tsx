@@ -1,8 +1,8 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/input";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Input, Label } from "@/components/ui/input";
 
 const EVIDENCE = [
   { value: "all", label: "Any evidence" },
@@ -10,32 +10,57 @@ const EVIDENCE = [
   { value: "lab", label: "Lab assays" },
 ];
 
+export type FilterState = {
+  q: string;
+  tag: string;
+  family: string;
+  evidence: string;
+};
+
 export function PlantFilters({
   tags,
   families,
+  initial,
 }: {
   tags: string[];
   families: string[];
+  initial: FilterState;
 }) {
   const router = useRouter();
-  const params = useSearchParams();
+  const [filters, setFilters] = useState(initial);
 
-  function update(key: string, value: string) {
-    const next = new URLSearchParams(params.toString());
-    if (value && value !== "all") next.set(key, value);
-    else next.delete(key);
-    router.push(`/plants?${next.toString()}`);
+  function push(next: FilterState) {
+    const url = new URLSearchParams();
+    if (next.q.trim()) url.set("q", next.q.trim());
+    if (next.tag && next.tag !== "all") url.set("tag", next.tag);
+    if (next.family && next.family !== "all") url.set("family", next.family);
+    if (next.evidence && next.evidence !== "all") url.set("evidence", next.evidence);
+    const query = url.toString();
+    router.push(query ? `/plants?${query}` : "/plants");
+  }
+
+  function changeSelect(key: "tag" | "family" | "evidence", value: string) {
+    const next = { ...filters, [key]: value };
+    setFilters(next);
+    push(next);
   }
 
   return (
-    <form className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4" method="get">
+    <form
+      className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4"
+      onSubmit={(event) => {
+        event.preventDefault();
+        push(filters);
+      }}
+    >
       <div className="space-y-1.5 sm:col-span-2">
-        <Label htmlFor="q">Search</Label>
+        <Label htmlFor="q">Search a condition</Label>
         <Input
           id="q"
           name="q"
-          defaultValue={params.get("q") ?? ""}
-          placeholder="Name, condition, family…"
+          value={filters.q}
+          onChange={(event) => setFilters({ ...filters, q: event.target.value })}
+          placeholder="eczema, itch, wound, stomach…"
         />
       </div>
       <div className="space-y-1.5">
@@ -44,8 +69,8 @@ export function PlantFilters({
           id="tag"
           name="tag"
           className="h-9 w-full rounded-lg border border-input bg-background px-3 text-sm"
-          defaultValue={params.get("tag") ?? "all"}
-          onChange={(event) => update("tag", event.target.value)}
+          value={filters.tag}
+          onChange={(event) => changeSelect("tag", event.target.value)}
         >
           <option value="all">All conditions</option>
           {tags.map((tag) => (
@@ -61,8 +86,8 @@ export function PlantFilters({
           id="family"
           name="family"
           className="h-9 w-full rounded-lg border border-input bg-background px-3 text-sm"
-          defaultValue={params.get("family") ?? "all"}
-          onChange={(event) => update("family", event.target.value)}
+          value={filters.family}
+          onChange={(event) => changeSelect("family", event.target.value)}
         >
           <option value="all">All families</option>
           {families.map((family) => (
@@ -78,8 +103,8 @@ export function PlantFilters({
           id="evidence"
           name="evidence"
           className="h-9 w-full rounded-lg border border-input bg-background px-3 text-sm"
-          defaultValue={params.get("evidence") ?? "all"}
-          onChange={(event) => update("evidence", event.target.value)}
+          value={filters.evidence}
+          onChange={(event) => changeSelect("evidence", event.target.value)}
         >
           {EVIDENCE.map((item) => (
             <option key={item.value} value={item.value}>
@@ -88,12 +113,12 @@ export function PlantFilters({
           ))}
         </select>
       </div>
-      <div className="flex items-end">
+      <div className="flex items-end gap-2">
         <button
           type="submit"
           className="h-9 rounded-lg bg-primary px-3 text-sm text-primary-foreground"
         >
-          Apply search
+          Search
         </button>
       </div>
     </form>

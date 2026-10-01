@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CitationChip } from "@/components/catalog/citation-chip";
 import { DisclaimerBanner } from "@/components/site/disclaimer";
@@ -45,7 +46,13 @@ export default async function PlantPage({
         </div>
         <div className="flex flex-wrap gap-1">
           {plant.applicationTags.map((tag) => (
-            <Badge key={tag} variant="secondary">
+            <Badge
+              key={tag}
+              variant="secondary"
+              render={
+                <Link href={`/plants?tag=${encodeURIComponent(tag)}`} />
+              }
+            >
               {tag}
             </Badge>
           ))}

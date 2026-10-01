@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { CitationChip } from "@/components/catalog/citation-chip";
 import { DisclaimerBanner } from "@/components/site/disclaimer";
@@ -19,6 +19,13 @@ export function ConsultForm() {
   const [blocked, setBlocked] = useState(false);
   const [summary, setSummary] = useState("");
   const [busy, setBusy] = useState(false);
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (blocked || matches) {
+      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [blocked, matches]);
 
   function toggle(list: string[], value: string, setter: (next: string[]) => void) {
     setter(list.includes(value) ? list.filter((item) => item !== value) : [...list, value]);
@@ -115,9 +122,12 @@ export function ConsultForm() {
         </Button>
       </form>
 
-      <div className="space-y-4">
+      <div ref={resultsRef} className="space-y-4 scroll-mt-6">
         {blocked ? (
-          <div className="rounded-xl bg-destructive/10 p-5">
+          <div
+            role="alert"
+            className="rounded-xl border border-destructive bg-destructive/10 p-5"
+          >
             <h2 className="font-heading text-2xl">Seek urgent care</h2>
             <p className="mt-2">
               Those warning signs are outside this catalog. Do not use herbal
@@ -127,9 +137,12 @@ export function ConsultForm() {
         ) : null}
 
         {matches && !blocked && matches.length === 0 ? (
-          <div className="rounded-xl border border-dashed p-6 text-muted-foreground">
-            No encoded traditional uses matched those tags. Try a broader skin tag
-            or browse the catalog.
+          <div
+            role="status"
+            className="rounded-xl border border-dashed p-6 text-muted-foreground"
+          >
+            No encoded traditional uses matched those tags. Try a broader skin
+            tag or browse the catalog.
           </div>
         ) : null}
 
@@ -143,7 +156,9 @@ export function ConsultForm() {
           <p className="text-sm text-muted-foreground">Optional summary loading…</p>
         ) : null}
 
-        {matches?.map((row) => (
+        {matches?.map((row) => {
+          const cited = row.matchedUses[0];
+          return (
           <article
             key={row.plant.id}
             className="space-y-2 rounded-xl bg-card p-4 ring-1 ring-foreground/10"
@@ -158,40 +173,52 @@ export function ConsultForm() {
                 .filter(Boolean)
                 .join(" · ")}
             </p>
-            {(row.matchedUses[0] ?? row.plant.traditionalUses[0]) ? (
-              <p>{(row.matchedUses[0] ?? row.plant.traditionalUses[0]).condition}</p>
+            {cited ? (
+              <>
+                <p>{cited.condition}</p>
+                {cited.preparation ? (
+                  <p className="text-sm">
+                    <span className="font-medium">Preparation as published: </span>
+                    {cited.preparation}
+                  </p>
+                ) : null}
+                {cited.partUsed ? (
+                  <p className="text-sm text-muted-foreground">
+                    Part: {cited.partUsed}
+                  </p>
+                ) : null}
+              </>
             ) : (
               <p className="text-sm text-muted-foreground">
-                Matched on laboratory tags only. Open the monograph for in-vitro
-                numbers — they are not a topical recipe.
+                Tagged for the selected symptoms, without a matching cited
+                sentence. Any numbers below are in-vitro assays, not a topical
+                recipe.
               </p>
             )}
-            {row.matchedUses[0]?.preparation ? (
-              <p className="text-sm">
-                <span className="font-medium">Preparation as published: </span>
-                {row.matchedUses[0].preparation}
-              </p>
-            ) : null}
-            {row.matchedUses[0]?.partUsed ? (
-              <p className="text-sm text-muted-foreground">
-                Part: {row.matchedUses[0].partUsed}
-              </p>
-            ) : null}
             <div className="flex flex-wrap gap-2">
-              {(row.matchedUses[0] ?? row.plant.traditionalUses[0]) ? (
-                <CitationChip
-                  sourceId={(row.matchedUses[0] ?? row.plant.traditionalUses[0]).sourceId}
-                  locator={(row.matchedUses[0] ?? row.plant.traditionalUses[0]).locator}
-                />
-              ) : null}
-              {row.plant.bioassays.length > 0 ? (
-                <span className="text-xs text-muted-foreground">
-                  {row.plant.bioassays.length} in-vitro assay values on file
-                </span>
+              {cited ? (
+                <CitationChip sourceId={cited.sourceId} locator={cited.locator} />
               ) : null}
             </div>
+            {row.plant.bioassays.length > 0 ? (
+              <details className="rounded-lg bg-muted/50 p-3 text-sm">
+                <summary className="cursor-pointer font-medium">
+                  In vitro assays ({row.plant.bioassays.length}) — not a dose
+                </summary>
+                <ul className="mt-2 space-y-1 text-muted-foreground">
+                  {row.plant.bioassays.map((assay, index) => (
+                    <li key={`${assay.target}-${index}`}>
+                      {assay.target}: {assay.value} {assay.unit} ({assay.metric})
+                      {assay.concentration ? `; ${assay.concentration}` : ""}
+                      {assay.extract ? `; ${assay.extract}` : ""}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ) : null}
           </article>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

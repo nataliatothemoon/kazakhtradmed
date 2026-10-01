@@ -1,0 +1,58 @@
+[
+  {
+    "id": "zhao-2025",
+    "shortTitle": "Zhao et al. 2025",
+    "title": "An ethnobotanical study on medicinal food plants used by the Kazakh people in Altay, Xinjiang, China",
+    "authors": "Zhao Y-q, Lei B, Qiu Y-j, Zhang J-z, Song W-d, Danabek Y, Fan C-z, Wang G-p",
+    "year": 2025,
+    "journal": "Journal of Ethnobiology and Ethnomedicine",
+    "doi": "10.1186/s13002-025-00817-w",
+    "url": "https://ethnobiomed.biomedcentral.com/articles/10.1186/s13002-025-00817-w",
+    "license": "CC BY-NC-ND 4.0",
+    "canonical": true,
+    "role": "Traditional medicinal-food uses among Kazakh people in Altay Prefecture (Table 2, 118 species).",
+    "duplicateOf": null
+  },
+  {
+    "id": "berganayeva-2023",
+    "shortTitle": "Berganayeva et al. 2023",
+    "title": "Medicinal Plants of the Flora of Kazakhstan Used in the Treatment of Skin Diseases",
+    "authors": "Berganayeva G, Kudaibergenova B, Litvinenko Y, Nazarova I, Sydykbayeva S, Vassilina G, Izdik N, Dyusebaeva M",
+    "year": 2023,
+    "journal": "Molecules",
+    "doi": "10.3390/molecules28104192",
+    "url": "https://www.mdpi.com/1420-3049/28/10/4192",
+    "license": "CC BY 4.0",
+    "canonical": true,
+    "role": "Published review of Kazakhstan flora used for skin disease; species monographs and Table 1.",
+    "duplicateOf": null
+  },
+  {
+    "id": "nurlybekova-2022",
+    "shortTitle": "Nurlybekova et al. 2022",
+    "title": "Traditional Use, Phytochemical Profiles and Pharmacological Properties of Artemisia Genus from Central Asia",
+    "authors": "Nurlybekova A, Kudaibergen A, Kazymbetova A, Amangeldi M, Baiseitova A, Ospanov M, Aisa HA, Ye Y, Ibrahim MA, Jenis J",
+    "year": 2022,
+    "journal": "Molecules",
+    "doi": "10.3390/molecules27165128",
+    "url": "https://www.mdpi.com/1420-3049/27/16/5128",
+    "license": "CC BY 4.0",
+    "canonical": true,
+    "role": "Artemisia traditional notes plus methanol-extract enzyme and antioxidant assays (Tables 4–5).",
+    "duplicateOf": null
+  },
+  {
+    "id": "berganayeva-preprint-2023",
+    "shortTitle": "Berganayeva preprint 2023",
+    "title": "Medicinal Plants of the Flora of Kazakhstan Used in the Treatment of Skin Diseases (preprint)",
+    "authors": "Berganayeva G et al.",
+    "year": 2023,
+    "journal": "Preprints.org",
+    "doi": "10.20944/preprints202304.0812.v1",
+    "url": "https://www.preprints.org/manuscript/202304.0812/v1",
+    "license": "CC BY 4.0",
+    "canonical": false,
+    "role": "Preprint of the published Molecules 2023 skin review. Not encoded separately.",
+    "duplicateOf": "berganayeva-2023"
+  }
+]
